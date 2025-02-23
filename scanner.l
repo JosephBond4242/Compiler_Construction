@@ -2,7 +2,7 @@
 
 %{
 #include<stdio.h>
-#include "tokendef.h"
+#include "tokendef-1.h"
 
 int scancol = 1;
 int yycol = 1;
