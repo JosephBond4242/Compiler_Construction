@@ -1,4 +1,3 @@
-
 /* definitions */
 
 %{
@@ -11,82 +10,90 @@ int scanlineno = 1;
 
 char* yyerror;
 
-void updateCol(); //TODO: Implement this function to keep track of column numbers
-void countLines(); //TODO: Implement this function to keep track of line numbers
-int processString(); //TODO: Implement this function to check for illegal escape sequences in string literals and print out escape sequences correctly.
+void updateCol();
+void countLines();
+int processString();
 %}
 
-newline         //TODO
-whitespace      //TODO
-integer         //TODO
-character       //TODO
+newline         \n
+whitespace      [ \t]+
+integer         [1-9][0-9]*
+integerlead0    0[0-9]+
+character       \'[^\\\n]\'
+string          \"([^\\\n\"]|\\.)*\"
+multlnstring    \"([^\\\"]|\\.)*\n([^\\\"]|\\.)*\"
+untermstring    \"([^\\\n\"]|\\.)*
 
-/* String can contain any characters between the double quotes other than a newline or
-// unescaped doublequotes.
-*/
-string       //TODO
+comment         //.*
+multlncomment   /\*([^*]|(\*+[^*/]))*\*+/
+untermcomment   /\*([^*]|(\*+[^*/]))*
 
-/* multiline string has \n somewhere in the middle */
-multlnstring //TODO
-
-/* If the end quote is found, one of the two regexes above will be matched. Otherwise,
-// the string is unterminated.
-*/
-untermstring //TODO
-
-comment         //TODO
-multlncomment   //TODO
-untermcomment   //TODO
-
-identifier      //TODO
-illidentifier   //TODO: regular expression for an illegal identifier
+identifier      [a-zA-Z_][a-zA-Z0-9_]*
+illidentifier   [0-9][a-zA-Z_][a-zA-Z0-9_]*
 
 yylineno = 1;
 
 %%
 
- /* rules */
+/* Keywords */
+"if"         { updateCol(); return KWD_IF; }
+"else"       { updateCol(); return KWD_ELSE; }
+"while"      { updateCol(); return KWD_WHILE; }
+"int"        { updateCol(); return KWD_INT; }
+"string"     { updateCol(); return KWD_STRING; }
+"char"       { updateCol(); return KWD_CHAR; }
+"return"     { updateCol(); return KWD_RETURN; }
+"void"       { updateCol(); return KWD_VOID; }
 
- /* Keywords */;
-//TODO: Support all keywords in mC
- /* Operators */;
-//TODO: Support all operators in mC
+/* Operators */
+"+"          { updateCol(); return OPER_ADD; }
+"-"          { updateCol(); return OPER_SUB; }
+"*"          { updateCol(); return OPER_MUL; }
+"/"          { updateCol(); return OPER_DIV; }
+"<"          { updateCol(); return OPER_LT; }
+">"          { updateCol(); return OPER_GT; }
+">="         { updateCol(); return OPER_GTE; }
+"<="        { updateCol(); return OPER_LTE; }
+"=="        { updateCol(); return OPER_EQ; }
+"!="        { updateCol(); return OPER_NEQ; }
+"="         { updateCol(); return OPER_ASGN; }
 
- /* Identifiers */;
-{identifier}    //TODO
-{illidentifier} //TODO
+/* Identifiers */
+{identifier}    { updateCol(); return ID; }
+{illidentifier} { updateCol(); yyerror = "Illegal identifier"; return ERROR; }
 
- /* Constants */;
-{integer}       //TODO
-{integerlead0}  //TODO: "Integers may not have leading zeros"
-{character}     //TODO
-{string}        {updateCol(); return processString();}
-{untermstring}  {updateCol(); yyerror = "Unterminated string"; return ERROR;}
-{multlnstring}  {updateCol(); countLines(); yyerror = "String spans multiple lines"; return ERROR;} // Catching a multi-line string and generating an error.
+/* Constants */
+{integer}       { updateCol(); return INTCONST; }
+{integerlead0}  { updateCol(); yyerror = "Integers may not have leading zeros"; return ERROR; }
+{character}     { updateCol(); return CHARCONST; }
+{string}        { updateCol(); return processString(); }
+{untermstring}  { updateCol(); yyerror = "Unterminated string"; return ERROR; }
+{multlnstring}  { updateCol(); countLines(); yyerror = "String spans multiple lines"; return ERROR; }
 
- /* Comments */;
-{comment}       //TODO
-{untermcomment} //TODO
-{multlncomment} //TODO
+/* Comments */
+{comment}       { updateCol(); }
+{untermcomment} { updateCol(); yyerror = "Unterminated comment"; return ERROR; }
+{multlncomment} { updateCol(); }
 
- /* Other */;
-{newline}       //TODO
-{whitespace}    //TODO
-.               {return ILLEGAL_TOK;}
+/* Other */
+{newline}       { countLines(); }
+{whitespace}    { updateCol(); }
+.               { return ILLEGAL_TOK; }
 
 %%
 
 /* user routines */
 
-void updateCol(){
-	//TODO: Keep track of column number
+void updateCol() {
+    yycol += yyleng;
 }
 
-void countLines(){
-	//TODO: Count the number of lines
+void countLines() {
+    yylineno++;
+    yycol = 1;
 }
 
-
-int processString(){
-	// TODO: Process a string literal and return the appropriate microsyntax.
+int processString() {
+    updateCol();
+    return STRCONST;
 }
