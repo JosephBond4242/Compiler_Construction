@@ -35,27 +35,27 @@ illidentifier   [0-9][a-zA-Z_]+[a-zA-Z0-9_]*
  /* rules */
 
  /* Keywords */
-"if"           { return KWD_IF; }
-"else"         { return KWD_ELSE; }
-"while"        { return KWD_WHILE; }
-"int"          { return KWD_INT; }
-"string"       { return KWD_STRING; }
-"char"         { return KWD_CHAR; }
-"return"       { return KWD_RETURN; }
-"void"         { return KWD_VOID; }
+"if"           { int temp_col = yycol; yycol += 2; return KWD_IF; }
+"else"         { int temp_col = yycol; yycol += 4; return KWD_ELSE; }
+"while"        { int temp_col = yycol; yycol += 5; return KWD_WHILE; }
+"int"          { int temp_col = yycol; yycol += 3; return KWD_INT; }
+"string"       { int temp_col = yycol; yycol += 6; return KWD_STRING; }
+"char"         { int temp_col = yycol; yycol += 4; return KWD_CHAR; }
+"return"       { int temp_col = yycol; yycol += 6; return KWD_RETURN; }
+"void"         { int temp_col = yycol; yycol += 4; return KWD_VOID; }
 
  /* Operators */
-"+"            { return OPER_ADD; }
-"-"            { return OPER_SUB; }
-"*"            { return OPER_MUL; }
-"/"            { return OPER_DIV; }
-"<"            { return OPER_LT; }
-">"            { return OPER_GT; }
-">="           { return OPER_GTE; }
-"<="           { return OPER_LTE; }
-"=="           { return OPER_EQ; }
-"!="           { return OPER_NEQ; }
-"="            { return OPER_ASGN; }
+"+"            { updateCol(); return OPER_ADD; }
+"-"            { updateCol(); return OPER_SUB; }
+"*"            { updateCol(); return OPER_MUL; }
+"/"            { updateCol(); return OPER_DIV; }
+"<"            { updateCol(); return OPER_LT; }
+">"            { updateCol(); return OPER_GT; }
+">="           { int temp_col = yycol; yycol += 2; updateCol(); return OPER_GTE; }
+"<="           { int temp_col = yycol; yycol += 2; return OPER_LTE; }
+"=="           { int temp_col = yycol; yycol += 2; return OPER_EQ; }
+"!="           { int temp_col = yycol; yycol += 2; return OPER_NEQ; }
+"="            { updateCol(); return OPER_ASGN; }
 
  /* Identifiers */
 {identifier}    { return ID; }
@@ -76,7 +76,7 @@ illidentifier   [0-9][a-zA-Z_]+[a-zA-Z0-9_]*
 
  /* Other */
 {newline}       { countLines(); }
-{whitespace}    { updateCol(); }
+{whitespace}    { yycol += yyleng; }
 .               { return ILLEGAL_TOK; }
 
 %%
