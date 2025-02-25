@@ -1,4 +1,4 @@
-#include "tokendef.h"
+#include "obj/tokendef-1.h"
 #include<stdio.h>
 
 extern char *yytext;
@@ -6,6 +6,8 @@ extern char *yytext;
 extern int yylineno;
 extern int yycol;
 extern char* yyerror;
+
+int yylex();
 
 void printToken(int tokenNum) {
   switch(tokenNum) {

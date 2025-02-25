@@ -1,18 +1,21 @@
 CC = gcc
 CFLAGS = -I./src -std=gnu99
-LEX=lex
+LDFLAGS = -L"/C/msys64/usr/lib" -lfl
+LEX=flex
 
 obj/scanner: obj/lex.yy.o obj/driver.o
-	gcc $(CFLAGS) -o $@ $^ -ll
+	gcc $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
 obj/lex.yy.o: obj/lex.yy.c
 	gcc $(CFLAGS) -c $< -o $@
 
-obj/lex.yy.c: src/scanner.l
+obj:
 	@mkdir -p obj
-	lex -o $@ $<
 
-obj/driver.o: src/driver.c
+obj/lex.yy.c: scanner.l | obj
+	$(LEX) -o $@ $<
+
+obj/driver.o: driver.c
 	@mkdir -p obj
 	$(CC)  $(CFLAGS) -c $< -o $@
 
