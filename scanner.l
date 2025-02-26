@@ -7,6 +7,7 @@
 int scancol = 1;
 int yycol = 1;
 int scanlineno = 1;
+int temp_col;
 
 char* yyerror;
 
@@ -21,7 +22,7 @@ whitespace      [ \t\r]+
 integer         [1-9][0-9]*
 integerlead0    0[0-9]+
 character       '\\?.'
-string         \"([^\"\\\n]|\\.)*\"
+string         \"([^\"\\\n]|\\[btnr'\"\\])*\"
 untermstring   \"([^\"\\\n]|\\.)*
 multlnstring   \"([^\"\\]*(\\n)[^\"\\]*)*\"
 comment         "//.*"
@@ -35,14 +36,14 @@ illidentifier   [0-9][a-zA-Z_]+[a-zA-Z0-9_]*
  /* rules */
 
  /* Keywords */
-"if"           { int temp_col = yycol; yycol += 2; return KWD_IF; }
-"else"         { int temp_col = yycol; yycol += 4; return KWD_ELSE; }
-"while"        { int temp_col = yycol; yycol += 5; return KWD_WHILE; }
-"int"          { int temp_col = yycol; yycol += 3; return KWD_INT; }
-"string"       { int temp_col = yycol; yycol += 6; return KWD_STRING; }
-"char"         { int temp_col = yycol; yycol += 4; return KWD_CHAR; }
-"return"       { int temp_col = yycol; yycol += 6; return KWD_RETURN; }
-"void"         { int temp_col = yycol; yycol += 4; return KWD_VOID; }
+"if"           { temp_col = yycol; yycol += 2; return KWD_IF; }
+"else"         { temp_col = yycol; yycol += 4; return KWD_ELSE; }
+"while"        { temp_col = yycol; yycol += 5; return KWD_WHILE; }
+"int"          { temp_col = yycol; yycol += 3; return KWD_INT; }
+"string"       { temp_col = yycol; yycol += 6; return KWD_STRING; }
+"char"         { temp_col = yycol; yycol += 4; return KWD_CHAR; }
+"return"       { temp_col = yycol; yycol += 6; return KWD_RETURN; }
+"void"         { temp_col = yycol; yycol += 4; return KWD_VOID; }
 
  /* Operators */
 "+"            { updateCol(); return OPER_ADD; }
@@ -51,14 +52,14 @@ illidentifier   [0-9][a-zA-Z_]+[a-zA-Z0-9_]*
 "/"            { updateCol(); return OPER_DIV; }
 "<"            { updateCol(); return OPER_LT; }
 ">"            { updateCol(); return OPER_GT; }
-">="           { int temp_col = yycol; yycol += 2; updateCol(); return OPER_GTE; }
-"<="           { int temp_col = yycol; yycol += 2; return OPER_LTE; }
-"=="           { int temp_col = yycol; yycol += 2; return OPER_EQ; }
-"!="           { int temp_col = yycol; yycol += 2; return OPER_NEQ; }
+">="           { temp_col = yycol; yycol += 2; return OPER_GTE; }
+"<="           { temp_col = yycol; yycol += 2; return OPER_LTE; }
+"=="           { temp_col = yycol; yycol += 2; return OPER_EQ; }
+"!="           { temp_col = yycol; yycol += 2; return OPER_NEQ; }
 "="            { updateCol(); return OPER_ASGN; }
 
  /* Identifiers */
-{identifier}    { return ID; }
+{identifier}    { temp_col = yycol; updateCol(); return ID; }
 {illidentifier} { yyerror = "Illegal identifier"; return ERROR; }
 
  /* Constants */
@@ -78,6 +79,10 @@ illidentifier   [0-9][a-zA-Z_]+[a-zA-Z0-9_]*
 {newline}       { countLines(); }
 {whitespace}    { yycol += yyleng; }
 .               { return ILLEGAL_TOK; }
+
+"("            { updateCol(); return LPAREN; }
+")"            { updateCol(); return RPAREN; }
+";"            { updateCol(); return SEMICLN; }
 
 %%
 

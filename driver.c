@@ -1,10 +1,11 @@
-#include "obj/tokendef-1.h"
+#include "tokendef-1.h"
 #include<stdio.h>
 
 extern char *yytext;
 
 extern int yylineno;
 extern int yycol;
+extern int temp_col;
 extern char* yyerror;
 
 int yylex();
@@ -12,121 +13,121 @@ int yylex();
 void printToken(int tokenNum) {
   switch(tokenNum) {
   case ID:
-    printf("<ID, %s> : (%d:%d)\n", yytext, yylineno, yycol);
+    printf("<ID, %s> : (%d:%d)\n", yytext, yylineno, temp_col);
     break;
   case INTCONST:
-    printf("<INTEGER, %s> : (%d:%d)\n", yytext, yylineno, yycol);
+    printf("<INTEGER, %s> : (%d:%d)\n", yytext, yylineno, temp_col);
     break;
   case CHARCONST:
-    printf("<CHARACTER, %s> : (%d:%d)\n", yytext, yylineno, yycol);
+    printf("<CHARACTER, %s> : (%d:%d)\n", yytext, yylineno, temp_col);
     break;
   case STRCONST:
-    printf("<STRING, %s> : (%d:%d)\n", yytext, yylineno, yycol);
+    printf("<STRING, %s> : (%d:%d)\n", yytext, yylineno, temp_col);
     break;
   case KWD_IF:
-    printf("<KEYWORD, if> : (%d:%d)\n", yylineno, yycol);
+    printf("<KEYWORD, if> : (%d:%d)\n", yylineno, temp_col);
     break;
   case KWD_ELSE:
-    printf("<KEYWORD, else> : (%d:%d)\n", yylineno, yycol);
+    printf("<KEYWORD, else> : (%d:%d)\n", yylineno, temp_col);
     break;
   case KWD_WHILE:
-    printf("<KEYWORD, while> : (%d:%d)\n", yylineno, yycol);
+    printf("<KEYWORD, while> : (%d:%d)\n", yylineno, temp_col);
     break;
   case KWD_INT:
-    printf("<KEYWORD, int> : (%d:%d)\n", yylineno, yycol);
+    printf("<KEYWORD, int> : (%d:%d)\n", yylineno, temp_col);
     break;
   case KWD_STRING:
-    printf("<KEYWORD, string> : (%d:%d)\n", yylineno, yycol);
+    printf("<KEYWORD, string> : (%d:%d)\n", yylineno, temp_col);
     break;
   case KWD_CHAR:
-    printf("<KEYWORD, char> : (%d:%d)\n", yylineno, yycol);
+    printf("<KEYWORD, char> : (%d:%d)\n", yylineno, temp_col);
     break;
   case KWD_RETURN:
-    printf("<KEYWORD, return> : (%d:%d)\n", yylineno, yycol);
+    printf("<KEYWORD, return> : (%d:%d)\n", yylineno, temp_col);
     break;
   case KWD_VOID:
-    printf("<KEYWORD, void> : (%d:%d)\n", yylineno, yycol);
+    printf("<KEYWORD, void> : (%d:%d)\n", yylineno, temp_col);
     break;
   case OPER_ADD:
-    printf("<OPERATOR, +> : (%d:%d)\n", yylineno, yycol);
+    printf("<OPERATOR, +> : (%d:%d)\n", yylineno, temp_col);
     break;
   case OPER_MUL:
-    printf("<OPERATOR, *> : (%d:%d)\n", yylineno, yycol);
+    printf("<OPERATOR, *> : (%d:%d)\n", yylineno, temp_col);
     break;
   case OPER_SUB:
-    printf("<OPERATOR, -> : (%d:%d)\n", yylineno, yycol);
+    printf("<OPERATOR, -> : (%d:%d)\n", yylineno, temp_col);
     break;
   case OPER_DIV:
-    printf("<OPERATOR, /> : (%d:%d)\n", yylineno, yycol);
+    printf("<OPERATOR, /> : (%d:%d)\n", yylineno, temp_col);
     break;
   case OPER_LT:
-    printf("<OPERATOR, <> : (%d:%d)\n", yylineno, yycol);
+    printf("<OPERATOR, <> : (%d:%d)\n", yylineno, temp_col);
     break;
   case OPER_LTE:
-    printf("<OPERATOR, <=> : (%d:%d)\n", yylineno, yycol);
+    printf("<OPERATOR, <=> : (%d:%d)\n", yylineno, temp_col);
     break;
   case OPER_GT:
-    printf("<OPERATOR, >> : (%d:%d)\n", yylineno, yycol);
+    printf("<OPERATOR, >> : (%d:%d)\n", yylineno, temp_col);
     break;
   case OPER_GTE:
-    printf("<OPERATOR, >=> : (%d:%d)\n", yylineno, yycol);
+    printf("<OPERATOR, >=> : (%d:%d)\n", yylineno, temp_col);
     break;
   case OPER_EQ:
-    printf("<OPERATOR, ==> : (%d:%d)\n", yylineno, yycol);
+    printf("<OPERATOR, ==> : (%d:%d)\n", yylineno, temp_col);
     break;
   case OPER_NEQ:
-    printf("<OPERATOR, !=> : (%d:%d)\n", yylineno, yycol);
+    printf("<OPERATOR, !=> : (%d:%d)\n", yylineno, temp_col);
     break;
   case OPER_ASGN:
-    printf("<OPERATOR, => : (%d:%d)\n", yylineno, yycol);
+    printf("<OPERATOR, => : (%d:%d)\n", yylineno, temp_col);
     break;
   case OPER_AT:
-    printf("<OPERATOR, @> : (%d:%d)\n", yylineno, yycol);
+    printf("<OPERATOR, @> : (%d:%d)\n", yylineno, temp_col);
     break;
   case OPER_INC:
-    printf("<OPERATOR, ++> : (%d:%d)\n", yylineno, yycol);
+    printf("<OPERATOR, ++> : (%d:%d)\n", yylineno, temp_col);
     break;
   case OPER_DEC:
-    printf("<OPERATOR, --> : (%d:%d)\n", yylineno, yycol);
+    printf("<OPERATOR, --> : (%d:%d)\n", yylineno, temp_col);
     break;
   case OPER_AND:
-    printf("<OPERATOR, &&> : (%d:%d)\n", yylineno, yycol);
+    printf("<OPERATOR, &&> : (%d:%d)\n", yylineno, temp_col);
     break;
   case OPER_OR:
-    printf("<OPERATOR, ||> : (%d:%d)\n", yylineno, yycol);
+    printf("<OPERATOR, ||> : (%d:%d)\n", yylineno, temp_col);
     break;
   case OPER_NOT:
-    printf("<OPERATOR, !> : (%d:%d)\n", yylineno, yycol);
+    printf("<OPERATOR, !> : (%d:%d)\n", yylineno, temp_col);
     break;
   case OPER_MOD:
-    printf("<OPERATOR, %%> : (%d:%d)\n", yylineno, yycol);
+    printf("<OPERATOR, %%> : (%d:%d)\n", yylineno, temp_col);
     break;
   case LSQ_BRKT:
-    printf("<PUNCTUATION, [> : (%d:%d)\n", yylineno, yycol);
+    printf("<PUNCTUATION, [> : (%d:%d)\n", yylineno, temp_col);
     break;
   case RSQ_BRKT:
-    printf("<PUNCTUATION, ]> : (%d:%d)\n", yylineno, yycol);
+    printf("<PUNCTUATION, ]> : (%d:%d)\n", yylineno, temp_col);
     break;
   case LCRLY_BRKT:
-    printf("<PUNCTUATION, {> : (%d:%d)\n", yylineno, yycol);
+    printf("<PUNCTUATION, {> : (%d:%d)\n", yylineno, temp_col);
     break;
   case RCRLY_BRKT:
-    printf("<PUNCTUATION, }> : (%d:%d)\n", yylineno, yycol);
+    printf("<PUNCTUATION, }> : (%d:%d)\n", yylineno, temp_col);
     break;
   case LPAREN:
-    printf("<PUNCTUATION, (> : (%d:%d)\n", yylineno, yycol);
+    printf("<PUNCTUATION, (> : (%d:%d)\n", yylineno, temp_col);
     break;
   case RPAREN:
-    printf("<PUNCTUATION, )> : (%d:%d)\n", yylineno, yycol);
+    printf("<PUNCTUATION, )> : (%d:%d)\n", yylineno, temp_col);
     break;
   case COMMA:
-    printf("<PUNCTUATION, ,> : (%d:%d)\n", yylineno, yycol);
+    printf("<PUNCTUATION, ,> : (%d:%d)\n", yylineno, temp_col);
     break;
   case SEMICLN:
-    printf("<PUNCTUATION, ;> : (%d:%d)\n", yylineno, yycol);
+    printf("<PUNCTUATION, ;> : (%d:%d)\n", yylineno, temp_col);
     break;
   case ERROR:
-    printf("<ERROR, %s> : (%d:%d)\n", yyerror, yylineno, yycol);
+    printf("<ERROR, %s> : (%d:%d)\n", yyerror, yylineno, temp_col);
     break;
   default:
     printf("<ILLEGAL TOKEN>\n");
